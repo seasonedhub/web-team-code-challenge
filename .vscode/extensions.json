@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "maptz.regionfolder",
+        "dbaeumer.vscode-eslint",
+        "ecmel.vscode-html-css",
+        "webreflection.literally-html"
+    ]
+}
