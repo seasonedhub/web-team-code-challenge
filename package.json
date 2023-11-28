@@ -4,7 +4,10 @@
   "description": "Github Codespace for Web Team's coding challenge",
   "main": "index.js",
   "scripts": {
-    "start": "vite serve src",
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "pnpm typecheck --watch",
+    "lint": "eslint --ext .ts,.tsx src/**/*.ts test/**/*.ts",
+    "start": "vite --config ./vite.config.ts serve src",
     "test": "vitest"
   },
   "keywords": [],
@@ -12,15 +15,16 @@
   "license": "ISC",
   "dependencies": {
     "@effect/schema": "^0.49.4",
-    "@typed/context": "^0.19.0",
-    "@typed/dom": "^8.19.0",
-    "@typed/environment": "^0.1.1",
-    "@typed/fx": "^1.18.2",
-    "@typed/navigation": "^0.6.2",
-    "@typed/route": "^1.0.2",
-    "@typed/router": "^0.19.3",
-    "@typed/template": "^0.1.2",
-    "@typed/ui": "^0.1.3",
+    "@typed/context": "^0.19.2",
+    "@typed/dom": "^8.19.2",
+    "@typed/environment": "^0.1.3",
+    "@typed/fx": "^1.18.4",
+    "@typed/navigation": "^0.6.4",
+    "@typed/route": "^1.0.4",
+    "@typed/router": "^0.19.5",
+    "@typed/template": "^0.1.4",
+    "@typed/ui": "^0.1.5",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
     "effect": "2.0.0-next.56",
     "eslint": "^8.54.0",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -29,13 +33,15 @@
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-sort-destructure-keys": "^1.5.0",
-    "todomvc-app-css": "^2.4.3",
-    "todomvc-common": "^1.0.5",
     "typescript": "^5.3.2"
   },
   "devDependencies": {
-    "@typed/tsconfig": "^0.1.0",
-    "vite": "^5.0.2",
-    "vitest": "^0.34.6"
+    "@effect/eslint-plugin": "^0.1.2",
+    "@typed/tsconfig": "^0.1.2",
+    "happy-dom": "^12.10.3",
+    "vite": "^5.0.3",
+    "vite-plugin-windicss": "^1.9.2",
+    "vitest": "^0.34.6",
+    "windicss": "^3.5.6"
   }
 }

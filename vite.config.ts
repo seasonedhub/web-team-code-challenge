@@ -1,4 +1,5 @@
 import { defineConfig } from "vite"
+import WindiCSS from 'vite-plugin-windicss'
 
 export default defineConfig({
   build: {
@@ -7,5 +8,5 @@ export default defineConfig({
     manifest: true,
     sourcemap: true
   },
-  plugins: []
+  plugins: [WindiCSS({})]
 })

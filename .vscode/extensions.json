@@ -3,6 +3,7 @@
         "maptz.regionfolder",
         "dbaeumer.vscode-eslint",
         "ecmel.vscode-html-css",
-        "webreflection.literally-html"
+        "webreflection.literally-html",
+        "voorjaar.windicss-intellisense"
     ]
 }
