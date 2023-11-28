@@ -1,5 +1,6 @@
 {
     "recommendations": [
+        "ms-vsliveshare.vsliveshare",
         "maptz.regionfolder",
         "dbaeumer.vscode-eslint",
         "ecmel.vscode-html-css",
