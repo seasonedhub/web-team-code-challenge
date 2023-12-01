@@ -41,6 +41,10 @@ export function editText(id: TodoId, text: string) {
   return (list: TodoList): TodoList => updateTodo(list, id, (todo) => ({ ...todo, text }))
 }
 
+export function toggleCompleted(id: TodoId) {
+  return (list: TodoList): TodoList => updateTodo(list, id, (todo) => ({ ...todo, completed: !todo.completed }))
+}
+
 export function isCompleted(todo: Todo): boolean {
   return todo.completed
 }
@@ -49,8 +53,20 @@ export function isActive(todo: Todo): boolean {
   return !todo.completed
 }
 
+export function toggleAllCompleted(list: TodoList): TodoList {
+  if (list.some(isActive)) {
+    return list.map((todo) => ({ ...todo, completed: true }))
+  } else {
+    return list.map((todo) => ({ ...todo, completed: false }))
+  }
+}
+
 export function deleteTodo(id: TodoId) {
   return (list: TodoList): TodoList => list.filter((todo) => todo.id !== id)
+}
+
+export function clearCompleted(list: TodoList): TodoList {
+  return list.filter(isActive)
 }
 
 export function activeCount(list: TodoList): number {
@@ -59,6 +75,14 @@ export function activeCount(list: TodoList): number {
 
 export function completedCount(list: TodoList): number {
   return list.filter(isCompleted).length
+}
+
+export function allAreCompleted(list: TodoList): boolean {
+  return list.length > 0 && list.every(isCompleted)
+}
+
+export function someAreCompleted(list: TodoList): boolean {
+  return list.length > 0 && list.some(isCompleted)
 }
 
 export function filterTodoList({ list, state }: { list: TodoList; state: FilterState }): TodoList {

@@ -8,6 +8,8 @@ import * as Option from "effect/Option"
 
 import * as Domain from "./domain"
 
+/* #region Services */
+
 export const CreateTodo = Context.Fn<(text: string) => Effect.Effect<never, never, Domain.Todo>>()("CreateTodo")
 export type CreateTodo = Context.Fn.Context<typeof CreateTodo>
 
@@ -32,6 +34,10 @@ export const Todos: Computed.Computed<TodoList | FilterState, never, Domain.Todo
 
 export const ActiveCount: Computed.Computed<TodoList, never, number> = TodoList.map(Domain.activeCount)
 
+export const SomeAreCompleted: Computed.Computed<TodoList, never, boolean> = TodoList.map(Domain.someAreCompleted)
+
+export const AllAreCompleted: Computed.Computed<TodoList, never, boolean> = TodoList.map(Domain.allAreCompleted)
+
 /* #endregion */
 
 /* #region Intent */
@@ -47,9 +53,28 @@ export const createTodo: Effect.Effect<CreateTodo | TodoList | TodoText, never, 
       onTrue: Effect.succeed(Option.none<Domain.Todo>())
     }))
 
+export const editTodo = (id: Domain.TodoId, text: string): Effect.Effect<TodoList, never, Domain.TodoList> =>
+  Effect.if(text.trim() === "", {
+    onFalse: TodoList.update(Domain.editText(id, text)),
+    onTrue: TodoList.update(Domain.deleteTodo(id))
+  })
+
+export const toggleTodoCompleted: (id: Domain.TodoId) => Effect.Effect<TodoList, never, Domain.TodoList> = flow(
+  Domain.toggleCompleted,
+  TodoList.update
+)
+
 export const deleteTodo: (id: Domain.TodoId) => Effect.Effect<TodoList, never, Domain.TodoList> = flow(
   Domain.deleteTodo,
   TodoList.update
+)
+
+export const clearCompletedTodos: Effect.Effect<TodoList, never, Domain.TodoList> = TodoList.update(
+  Domain.clearCompleted
+)
+
+export const toggleAllCompleted: Effect.Effect<TodoList, never, Domain.TodoList> = TodoList.update(
+  Domain.toggleAllCompleted
 )
 
 /* #endregion */

@@ -1,18 +1,37 @@
+import { SchemaStorage, Storage } from "@typed/dom/Storage"
 import { CurrentEnvironment } from "@typed/environment"
+import * as Fx from "@typed/fx/Fx"
 import * as Navigation from "@typed/navigation"
 import * as Route from "@typed/route"
 import * as Router from "@typed/router"
-import * as RenderContext from "@typed/template/RenderContext"
+import { RenderContext } from "@typed/template"
 import { Effect, Layer } from "effect"
 import * as App from "./application"
 import * as Domain from "./domain"
 
+/* #region Storage */
+
+const TODOS_STORAGE_KEY = `@typed/todomvc/todos`
+
+const storage = SchemaStorage(({ json }) => ({
+  [TODOS_STORAGE_KEY]: json(Domain.TodoList)
+}))
+
+const todos = storage.key(TODOS_STORAGE_KEY)
+
+const getTodos = todos.get({ errors: "all", onExcessProperty: "error" }).pipe(
+  Effect.flatten,
+  Effect.catchAll(() => Effect.succeed([]))
+)
+
+// Everytime there is a change to our TodoList, write its value back to storage
+const writeTodos = Fx.tap(App.TodoList, (list) => todos.set(list).pipe(Effect.catchAll(() => Effect.unit)))
+
+/* #endregion */
+
 /* #region Routing */
 
-const allRoute = Route.fromPath("/", {
-  // Only matches exactly "/"
-  match: { end: true }
-})
+const allRoute = Route.fromPath("/", { match: { end: true } })
 const activeRoute = Route.fromPath("/active")
 const completedRoute = Route.fromPath("/completed")
 
@@ -40,7 +59,7 @@ const currentFilterState = Router
 
 const ModelLive = Layer.mergeAll(
   // Ininialize our TodoList from storage
-  App.TodoList.make(Effect.succeed([])),
+  App.TodoList.make(getTodos),
   // Update our FilterState everytime the current path changes
   App.FilterState.make(currentFilterState),
   // Initialize our TodoText
@@ -57,15 +76,21 @@ const CreateTodoLive = App.CreateTodo.implement((text) =>
   }))
 )
 
-const AppLive = CreateTodoLive.pipe(
-  Layer.useMerge(ModelLive)
-)
+// Create our subscriptiosn to streams
+const SubscriptionsLive = Fx.drainLayer(writeTodos)
+
+const AppLive = ModelLive.pipe(Layer.provideMerge(
+  Layer.mergeAll(
+    CreateTodoLive,
+    SubscriptionsLive
+  )
+))
 
 export const Live = () =>
   AppLive
     .pipe(
+      Layer.useMerge(Layer.mergeAll(Storage.layer(localStorage), Navigation.fromWindow)),
       Layer.useMerge(Router.browser),
-      Layer.useMerge(Navigation.fromWindow),
       Layer.useMerge(RenderContext.browser(window))
     )
 
