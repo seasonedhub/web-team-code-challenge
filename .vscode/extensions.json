@@ -5,6 +5,7 @@
         "dbaeumer.vscode-eslint",
         "ecmel.vscode-html-css",
         "webreflection.literally-html",
-        "voorjaar.windicss-intellisense"
+        "voorjaar.windicss-intellisense",
+        "esbenp.prettier-vscode"
     ]
 }
