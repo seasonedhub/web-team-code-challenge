@@ -6,6 +6,7 @@ import * as Route from "@typed/route"
 import * as Router from "@typed/router"
 import { RenderContext } from "@typed/template"
 import { Effect, Layer } from "effect"
+import { mockStorage } from "mock-storage"
 import * as App from "./application"
 import * as Domain from "./domain"
 
@@ -102,7 +103,8 @@ export const Test = (url: URL) =>
       Layer.useMerge(RenderContext.RenderContext.scoped(
         RenderContext.make({ environment: "test" }, true)
       )),
-      Layer.useMerge(CurrentEnvironment.layer("test"))
+      Layer.useMerge(CurrentEnvironment.layer("test")),
+      Layer.useMerge(Storage.layer(mockStorage()))
     )
 
 /* #endregion */
